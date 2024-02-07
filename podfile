@@ -1,47 +1,7 @@
+# Podfile
+platform :ios, '12.0' # Asegúrate de que esto coincida con el deployment target de tu proyecto.
 
-platform :ios, min_ios_version_supported
-
-linkage = ENV['USE_FRAMEWORKS']
-if linkage != nil
-  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-  use_frameworks! :linkage => linkage.to_sym
-end
-
-  #Notifications
-  permissions_path = '../node_modules/react-native-permissions/ios'
-  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
-
-  #Firebase
-  pod 'Firebase', :modular_headers => true
-  pod 'FirebaseCore', :modular_headers => true 
-  pod 'GoogleUtilities', :modular_headers => true
-  pod 'FirebaseCoreExtension', :modular_headers => true
-  pod 'FirebaseInstallations', :modular_headers => true
-  pod 'GoogleDataTransport', :modular_headers => true
-  pod 'nanopb', :modular_headers => true
-  $RNFirebaseAsStaticFramework = true
-
-  # ZendeskSDK
-  pod 'ZendeskChatProvidersSDK', '~> 3.0.0'
-  pod 'ZendeskAnswerBotSDK', '~> 3.0.0'# AnswerBot-only on the Unified SDK
-  pod 'ZendeskChatSDK', '~> 3.0.0'    # Chat-only on the Unified SDK
-  pod 'ZendeskSupportSDK', '~> 6.0.0'  # Support-only on the Unified SDK
-  # End ZendeskSDK
-
-  post_install do |installer|
-    react_native_post_install(
-      installer,
-      # Set `mac_catalyst_enabled` to `true` in order to apply patches
-      # necessary for Mac Catalyst builds
-      :mac_catalyst_enabled => false
-    )
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
-
-    installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-          config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
-      end
-    end
-
-  end
+target 'TuTarget' do
+  use_frameworks!
+  # Agrega tus dependencias aquí
 end
