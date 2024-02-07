@@ -1,7 +1,6 @@
-# Podfile
-platform :ios, '12.0' # Asegúrate de que esto coincida con el deployment target de tu proyecto.
+platform :ios, '12.0'
 
 target 'TuTarget' do
   use_frameworks!
-  # Agrega tus dependencias aquí
+  pod 'Alamofire', '~> 5.2'
 end
