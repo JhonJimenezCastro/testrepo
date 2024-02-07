@@ -26,9 +26,9 @@ jobs:
       - name: Install cocoa
         run: sudo gem install cocoapods -v 1.11.3
 
-  
+      - name: Repo update
+        run: pod install --repo-update
 
-      # Runs a single command using the runners shell
       - name: ver pod versions
         run: pod --version
 
