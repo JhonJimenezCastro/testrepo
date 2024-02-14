@@ -1,0 +1,45 @@
+name: Save CI Logs
+
+# Activa este workflow cuando tu workflow `CI` ha completado.
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  download_and_upload_logs:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - name: Download Workflow Logs
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.event.repository.name }}"
+          RUN_ID="${{ github.event.workflow_run.id }}"
+          FILE_NAME="ci-workflow-logs-${RUN_ID}.zip"
+          echo "FILE_NAME=$FILE_NAME"
+          
+          # Descargar los registros del workflow `CI`
+          curl -L -o "$FILE_NAME" \
+            -H "Authorization: token $TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/$OWNER/$REPO/actions/runs/$RUN_ID/logs"
+          
+          if [ ! -f "$FILE_NAME" ]; then
+            echo "Failed to download the logs"
+            exit 1
+          fi
+
+      # Sube los registros descargados como un artefacto
+      - name: Upload Logs as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ci-workflow-logs
+          path: "$FILE_NAME"
