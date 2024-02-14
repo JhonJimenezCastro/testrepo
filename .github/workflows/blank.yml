@@ -16,18 +16,35 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Install cocoa
-        run: sudo gem install cocoapods -v 1.11.3
+      # Mover el directorio terraform/app a un directorio temporal antes del análisis de SonarCloud
+      - name: Temporarily move terraform/app if it exists
+        run: |
+          if [ -d "terraform/app" ]; then
+            echo "terraform/app exists, moving to a temporary directory..."
+            mkdir -p $RUNNER_TEMP_DIR/temp_app
+            mv terraform/app $RUNNER_TEMP_DIR/temp_app/
+          else
+            echo "terraform/app does not exist, skipping move..."
+          fi
 
-      - name: Repo update
-        run: pod install --repo-update
-
-      - name: ver pod versions
-        run: pod --version
+      - name: Run SonarCloud analysis
+        run: |
+          echo "Hola Mundo - Aquí se ejecutaría el análisis con SonarCloud"
+  
+      # Mover de vuelta el directorio terraform/app desde el directorio temporal después del análisis
+      - name: Restore terraform/app if it was moved
+        if: always()
+        run: |
+          if [ -d "$RUNNER_TEMP_DIR/temp_app/app" ]; then
+            mv $RUNNER_TEMP_DIR/temp_app/app terraform/
+            echo "terraform/app restored from the temporary directory."
+          else
+            echo "No temporary terraform/app present, nothing to restore."
+          fi
