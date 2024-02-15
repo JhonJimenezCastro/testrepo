@@ -30,7 +30,7 @@ jobs:
         run: pod --version
 
       - name: Install cocoapods
-        run: sudo gem install cocoapods -v 1.15.0
+        run: sudo gem install cocoapods -v 1.15.2
 
       - name: Check CocoaPods version
         run: pod --version
