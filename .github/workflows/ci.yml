@@ -54,7 +54,7 @@ jobs:
             git checkout $BRANCH_NAME
             git checkout -b rollback/$BRANCH_NAME-$COMMIT_HASH $COMMIT_HASH
             git add .
-            git commit -allow-empty -m "Rollback commit $COMMIT_HASH"
+            git commit --allow-empty -m "Rollback commit $COMMIT_HASH"
             git push -f
                         
             git checkout rollback/$BRANCH_NAME-$COMMIT_HASH
