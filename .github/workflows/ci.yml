@@ -54,14 +54,15 @@ jobs:
 
             # Reiniciando la rama para que el HEAD sea el commit deseado
             git checkout $BRANCH_NAME
-            git checkout -b rollback/$BRANCH_NAME-$COMMIT $COMMIT
+            git revert --no-commit $COMMIT..HEAD
             git add .
             git commit --allow-empty -m "Rollback commit $COMMIT"
-            git push --set-upstream origin rollback/$BRANCH_NAME-$COMMIT
-                        
-            git checkout rollback/$BRANCH_NAME-$COMMIT
-            git fetch && git pull
-            git rebase rollback/$BRANCH_NAME-$COMMIT $BRANCH_NAME
+
+            #git push --set-upstream origin rollback/$BRANCH_NAME-$COMMIT         
+            # git checkout rollback/$BRANCH_NAME-$COMMIT
+            # git fetch && git pull
+            # git rebase rollback/$BRANCH_NAME-$COMMIT $BRANCH_NAME
+            
             git push origin $BRANCH_NAME --force
 
           else
