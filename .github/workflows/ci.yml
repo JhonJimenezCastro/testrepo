@@ -27,6 +27,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verificar token
+        env:
+          MY_PAT: ${{ secrets.TOKEN }}
+        run: |
+          echo $MY_PAT
+          if [ -z "$MY_PAT" ]; then
+            echo "El PAT está vacío"
+            exit 1
+          fi
+
       - name: onDemand Rollback
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.commit-to-rollback != ''
         env:
