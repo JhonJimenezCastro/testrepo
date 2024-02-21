@@ -52,14 +52,14 @@ jobs:
 
             # Reiniciando la rama para que el HEAD sea el commit deseado
             git checkout $BRANCH_NAME
-            git checkout -b rollback/$BRANCH_NAME-$COMMIT_HASH $COMMIT_HASH
+            git checkout -b rollback/$BRANCH_NAME-$COMMIT $COMMIT
             git add .
-            git commit --allow-empty -m "Rollback commit $COMMIT_HASH"
+            git commit --allow-empty -m "Rollback commit $COMMIT"
             git push -f
                         
-            git checkout rollback/$BRANCH_NAME-$COMMIT_HASH
+            git checkout rollback/$BRANCH_NAME-$COMMIT
             git fetch && git pull
-            git rebase rollback/$BRANCH_NAME-$COMMIT_HASH $BRANCH_NAME
+            git rebase rollback/$BRANCH_NAME-$COMMIT $BRANCH_NAME
             git push origin $BRANCH_NAME --force
 
           else
