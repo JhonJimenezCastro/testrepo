@@ -24,6 +24,7 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v3
+        token: ${{ secrets.TOKEN }}
         with:
           fetch-depth: 0
 
