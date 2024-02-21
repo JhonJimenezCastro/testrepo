@@ -1,20 +1,12 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  # push:
-  #   branches: [ "main" ]
-
   workflow_dispatch:
     inputs:
       commit-to-rollback:
         required: false
         description: 'SHA-1 del commit para el rollback'
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
@@ -56,13 +48,7 @@ jobs:
             git checkout $BRANCH_NAME
             git revert --no-commit $COMMIT..HEAD
             git add .
-            git commit --allow-empty -m "Rollback commit $COMMIT"
-
-            #git push --set-upstream origin rollback/$BRANCH_NAME-$COMMIT         
-            # git checkout rollback/$BRANCH_NAME-$COMMIT
-            # git fetch && git pull
-            # git rebase rollback/$BRANCH_NAME-$COMMIT $BRANCH_NAME
-            
+            git commit --allow-empty -m "Rollback commit $COMMIT"           
             git push origin $BRANCH_NAME --force
 
           else
