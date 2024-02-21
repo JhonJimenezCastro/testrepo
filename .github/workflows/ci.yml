@@ -27,7 +27,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: onDemand Deploy
+      - name: onDemand Rollback
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.commit-to-rollback != ''
         env:
           BRANCH_NAME: ${{ github.ref }}
@@ -40,19 +40,34 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
-
           if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
             git fetch origin $BRANCH_NAME --unshallow >/dev/null 2>&1
           else
             git fetch origin $BRANCH_NAME >/dev/null 2>&1
           fi
 
+          # Asegurándose que el commit esté en la historia de la rama actual
           if git merge-base --is-ancestor $COMMIT origin/$BRANCH_NAME; then
             echo "El SHA-1 $COMMIT es parte del historial de la rama $BRANCH_NAME."
+
+            # Reiniciando la rama para que el HEAD sea el commit deseado
+            git checkout $BRANCH_NAME
+            git checkout -b rollback/$BRANCH_NAME-$COMMIT_HASH $COMMIT_HASH
+            git add .
+            git commit -allow-empty -m "Rollback commit $COMMIT_HASH"
+            git push -f
+                        
+            git checkout rollback/$BRANCH_NAME-$COMMIT_HASH
+            git fetch && git pull
+            git rebase rollback/$BRANCH_NAME-$COMMIT_HASH $BRANCH_NAME
+            git push origin $BRANCH_NAME --force
+
           else
             echo "El SHA-1 $COMMIT NO es parte del historial de la rama $BRANCH_NAME."
             exit 1
           fi
+
+
 
 
 
