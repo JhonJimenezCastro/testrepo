@@ -55,7 +55,7 @@ jobs:
             git checkout -b rollback/$BRANCH_NAME-$COMMIT $COMMIT
             git add .
             git commit --allow-empty -m "Rollback commit $COMMIT"
-            git push -f
+            git push --set-upstream origin rollback/$BRANCH_NAME-$COMMIT
                         
             git checkout rollback/$BRANCH_NAME-$COMMIT
             git fetch && git pull
