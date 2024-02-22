@@ -21,7 +21,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
 
       - name: onDemand Rollback
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.commit-to-rollback != ''
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.commit-to-rollback != '' && github.workflow == 'Rollback Reset Hard'
         env:
           BRANCH_NAME: ${{ github.ref }}
           COMMIT: ${{ github.event.inputs.commit-to-rollback }}

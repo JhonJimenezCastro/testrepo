@@ -20,8 +20,9 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.TOKEN }}
 
+
       - name: onDemand Rollback
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.commit-to-rollback != ''
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.commit-to-rollback != '' && github.workflow == 'Rollback Revert'
         env:
           BRANCH_NAME: ${{ github.ref }}
           COMMIT: ${{ github.event.inputs.commit-to-rollback }}
