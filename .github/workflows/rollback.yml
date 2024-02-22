@@ -26,7 +26,6 @@ jobs:
           BRANCH_NAME: ${{ github.ref }}
           COMMIT: ${{ github.event.inputs.commit-to-rollback }}
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          WORKFLOW_ID: ${{ github.run_id }}
         shell: bash
         run: |
           BRANCH_NAME=${BRANCH_NAME#refs/heads/}
@@ -48,9 +47,9 @@ jobs:
             # Reiniciando la rama para que el HEAD sea el commit deseado
             git checkout $BRANCH_NAME
 
-            TIMESTAMP=$(date -u +"%Y%m%d-%H%M%S")
+            TIMESTAMP=$(date -u +"%Y%m%d")
             CURRENT_HEAD_MSG=$(git log -1 --pretty=%B)
-            ROLLBACK_BRANCH="rollback/$BRANCH_NAME-$CURRENT_HEAD_MSG-$COMMIT-$TIMESTAMP-$WORKFLOW_ID"
+            ROLLBACK_BRANCH="rollback/$BRANCH_NAME-$CURRENT_HEAD_MSG-$COMMIT-$TIMESTAMP"
 
             git checkout -b $ROLLBACK_BRANCH
             git add .
