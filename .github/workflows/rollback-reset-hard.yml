@@ -1,4 +1,4 @@
-name: CI
+name: Rollback Reset Hard
 
 on:
   workflow_dispatch:
@@ -46,17 +46,22 @@ jobs:
 
             # Reiniciando la rama para que el HEAD sea el commit deseado
             git checkout $BRANCH_NAME
-            git revert --no-commit $COMMIT..HEAD
+
+            TIMESTAMP=$(date -u +"%Y%m%d")
+            CURRENT_HEAD_MSG=$(git log -1 --pretty=%B | tr -d '\n' | tr -s ' ' | tr '[:space:]' '-')
+            SANITIZED_MSG=$(echo $CURRENT_HEAD_MSG | tr '[:punct:]' '-')
+            ROLLBACK_BRANCH="rollback/$BRANCH_NAME-$SANITIZED_MSG-$COMMIT-$TIMESTAMP"
+
+            git checkout -b $ROLLBACK_BRANCH
             git add .
-            git commit --allow-empty -m "Rollback commit $COMMIT"           
+            git commit --allow-empty -m "Rollback commit $COMMIT"
+            git push origin -u $ROLLBACK_BRANCH
+
+            git checkout $BRANCH_NAME
+            git reset --hard $COMMIT   
             git push origin $BRANCH_NAME --force
 
           else
             echo "El SHA-1 $COMMIT NO es parte del historial de la rama $BRANCH_NAME."
             exit 1
           fi
-
-
-
-
-
