@@ -53,8 +53,6 @@ jobs:
             ROLLBACK_BRANCH="rollback/$BRANCH_NAME-$SANITIZED_MSG-$COMMIT-$TIMESTAMP"
 
             git checkout -b $ROLLBACK_BRANCH
-            git add .
-            git commit --allow-empty -m "Rollback commit $COMMIT"
             git push origin -u $ROLLBACK_BRANCH
 
             git checkout $BRANCH_NAME
