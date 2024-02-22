@@ -48,8 +48,9 @@ jobs:
             git checkout $BRANCH_NAME
 
             TIMESTAMP=$(date -u +"%Y%m%d")
-            CURRENT_HEAD_MSG=$(git log -1 --pretty=%B)
-            ROLLBACK_BRANCH="rollback/$BRANCH_NAME-$CURRENT_HEAD_MSG-$COMMIT-$TIMESTAMP"
+            CURRENT_HEAD_MSG=$(git log -1 --pretty=%B | tr -d '\n' | tr -s ' ' | tr '[:space:]' '-')
+            SANITIZED_MSG=$(echo $CURRENT_HEAD_MSG | tr '[:punct:]' '-')
+            ROLLBACK_BRANCH="rollback/$BRANCH_NAME-$SANITIZED_MSG-$COMMIT-$TIMESTAMP"
 
             git checkout -b $ROLLBACK_BRANCH
             git add .
